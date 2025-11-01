@@ -1,17 +1,3 @@
-// AI
-add_civ_waypoints = compileFinal preprocessFileLineNumbers "scripts\server\ai\add_civ_waypoints.sqf";
-add_defense_waypoints = compileFinal preprocessFileLineNumbers "scripts\server\ai\add_defense_waypoints.sqf";
-battlegroup_ai = compileFinal preprocessFileLineNumbers "scripts\server\ai\battlegroup_ai.sqf";
-building_defence_ai = compileFinal preprocessFileLineNumbers "scripts\server\ai\building_defence_ai.sqf";
-patrol_ai = compileFinal preprocessFileLineNumbers "scripts\server\ai\patrol_ai.sqf";
-prisonner_ai = compileFinal preprocessFileLineNumbers "scripts\server\ai\prisonner_ai.sqf";
-troup_transport = compileFinal preprocessFileLineNumbers "scripts\server\ai\troup_transport.sqf";
-
-// Battlegroup
-spawn_air = compileFinal preprocessFileLineNumbers "scripts\server\battlegroup\spawn_air.sqf";
-spawn_boat = compileFinal preprocessFileLineNumbers "scripts\server\battlegroup\spawn_boat.sqf";
-spawn_battlegroup = compileFinal preprocessFileLineNumbers "scripts\server\battlegroup\spawn_battlegroup.sqf";
-
 // Game
 check_victory_conditions = compileFinal preprocessFileLineNumbers "scripts\server\game\check_victory_conditions.sqf";
 
@@ -38,10 +24,12 @@ wait_to_spawn_sector = compileFinal preprocessFileLineNumbers "scripts\server\se
 // Globals
 active_sectors = []; publicVariable "active_sectors";
 
+
+//TODO Change the logic of the below sqf files so they are not using execVM
 execVM "scripts\server\base\startgame.sqf";
 execVM "scripts\server\base\huron_manager.sqf";
 execVM "scripts\server\base\startvehicle_spawn.sqf";
-[] call KPLIB_fnc_createSuppModules;
+[] call KPLIB_server_fnc_createSuppModules;
 execVM "scripts\server\battlegroup\counter_battlegroup.sqf";
 execVM "scripts\server\battlegroup\random_battlegroups.sqf";
 execVM "scripts\server\battlegroup\readiness_increase.sqf";
@@ -69,8 +57,8 @@ execVM "scripts\server\resources\recalculate_timer_sector.sqf";
 execVM "scripts\server\resources\unit_cap.sqf";
 execVM "scripts\server\sector\lose_sectors.sqf";
 
-KPLIB_fsm_sectorMonitor = [] call KPLIB_fnc_sectorMonitor;
-if (KP_liberation_high_command) then {KPLIB_fsm_highcommand = [] call KPLIB_fnc_highcommand;};
+KPLIB_fsm_sectorMonitor = [] call KPLIB_server_fnc_sectorMonitor;
+if (KP_liberation_high_command) then {KPLIB_fsm_highcommand = [] call KPLIB_server_fnc_highcommand;};
 
 // Select FOB templates
 switch (KP_liberation_preset_opfor) do {
@@ -151,7 +139,7 @@ if (KP_liberation_restart > 0) then {
 ["KPLIB_ResetBattleGroups", {
     {
         if (_x getVariable ["KPLIB_isBattleGroup",false]) then {
-            [_x] call battlegroup_ai;
+            [_x] call KPLIB_server_fnc_battlegroup_ai;
         }
     } forEach allGroups;
 }] call CBA_fnc_addEventHandler;
